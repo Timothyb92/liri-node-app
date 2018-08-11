@@ -9,7 +9,11 @@ var command = process.argv[2];
 
 if (command == "my-tweets"){
     client.get('search/tweets', {q: 'Tim17902317'}, function(error, tweets, response) {
-        // console.log(tweets);
+        console.log("============================================================");
+        for (i = 0 ; i < 10 ; i ++){
+            console.log(tweets.statuses[i].text);
+            console.log("============================================================");
+        }
      });
 }
 
