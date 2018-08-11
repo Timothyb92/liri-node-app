@@ -1,29 +1,27 @@
+//Requiring all dependencies
 require("dotenv").config();
 var keys = require("./keys.js");
 var Spotify = require("node-spotify-api");
 var Twitter = require("twitter");
 var request = require("request");
 var fs = require("fs");
+
+//Initializing twitter and spotify
 var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter)
+
+//Declaring the command the user inputs
 var command = process.argv[2];
+
+//Variables used to take the input from the user and set them to the search terms
+//For both Spotify and OMDB
 var movieSearchTerm = "";
 var movieSearchArray = [];
 var spotifySearchTerm = "";
 var spotifySearchArray = [];
 
-function getTweets(){
-    client.get('search/tweets', {q: 'Tim17902317'}, function(error, tweets, response) {
-        console.log("============================================================");
-        //NEED TO INCREASE THIS TO 20 ONCE I HAVE 20 TWEETS
-        for (k = 0 ; k < 10 ; k ++){
-            console.log(tweets.statuses[k].text);
-            console.log("============================================================");
-        }
-     });
-}
-
-
+//This if/else statement takes in user input and assigns it to the search parameters for
+//both Spotify and OMDB. If the user doesn't input a search term, it sets the default.
 if (!process.argv[3]){
     spotifySearchTerm = "The Sign";
     movieSearchTerm = "Mr. Nobody";
@@ -37,17 +35,37 @@ else {
     movieSearchTerm = movieSearchArray.join(" ");
 }
 
+//Function taht uses the twitter package to return 20 of my tweets to the console
+function getTweets(){
+    client.get('search/tweets', {q: 'Tim17902317'}, function(error, tweets, response) {
+        //Puts a line of ===== before the first tweet
+        console.log("============================================================");
+        //Loops through 20 of my tweets
+        for (k = 0 ; k < 20 ; k ++){
+            //Logs the tweet being iterated upon to the console
+            console.log(tweets.statuses[k].text);
+            console.log("============================================================");
+        }
+     });
+}
+
+//Function that takes the user's input and searches spotify for information about the song they entered.
 function getSongInfo(song){
+    //Sets the song being searched for to the variable assigned in the if/else statement above
     song = spotifySearchTerm
     spotify.search({
+        //Searches specifically for a song
         type: "track",
         query: song,
+        //Returns one song
         limit: 1
     },
     function(err, data){
+        //If an error occurs, it is logged to the console.
         if (err) {
             console.log(err);
         }
+        //Logs the name of the song, the artists, album name, and a preview URL.
         console.log(data.tracks.items[0].name);
         console.log(data.tracks.items[0].album.artists[0].name);
         console.log(data.tracks.items[0].album.name);
@@ -55,10 +73,14 @@ function getSongInfo(song){
     })
 }
 
+//Function that takes the user's input and searches for a movie.
 function getMovieInfo(movie){
+    //Sets the movie being serached for to the variable assigned in the if/else statement above
     movie = movieSearchTerm
     request("http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy", function(error, response, body){
+        //If there is no error and we have a good response code, the following code will run
         if (!error && response.statusCode === 200){
+            //This series of console.logs displays the title, year, ratings, language, plot, and actors of the movie
             console.log("Title: " + JSON.parse(body).Title);
             console.log("Year released: " + JSON.parse(body).Year);
             console.log("IMDB Rating: " + JSON.parse(body).Ratings[0].Value);
@@ -71,28 +93,42 @@ function getMovieInfo(movie){
     })
 }
 
+//Function that runs whatever command is in the random.txt file.
 function doWhatItSays(){
+    //uses the fs module to read random.txt
     fs.readFile("random.txt", "utf8", function(err, data){
         if(err){
+            //if an error occurs, it is logged to the console.
             console.log(err);
         } else {
+            //Takes the items in random.txt and splits them into arrays. This sets the command being
+            //entered to the index of [0] and the argument to the index of [1].
             var randomArr = data.split(",");
+            //If the command, or index at [0], is 'spotify-this-song', this code will execute.
             if (randomArr[0] === "spotify-this-song"){
                 console.log("Running spotify search from doWhatItSays()")
+                //Sets the spotify search tearm to the argument passed in random.txt
                 spotifySearchTerm = randomArr[1];
+                //calls the getSongInfo() function with the value of randomArr[1] as an argument.
                 getSongInfo();
+                //If the command in random.txt is 'my-tweets', this code will execute.
             } else if (randomArr[0] === "my-tweets"){
                 console.log("running getTweets() from doWhatItSays()");
+                //Calls the getTweets function.
                 getTweets();
+                //If the command in random.txt is 'movie-this', this code will execute.
             } else if (randomArr[0] === "movie-this"){
-                console.log("Running imdb search from doWhatItSays()")
+                console.log("Running imdb search from doWhatItSays()");
+                //sets the movie search term to the arument passed in random.txt
                 movieSearchTerm = randomArr[1];
+                //Calls the getMovieInfo function with the value of randomArr[1] as an arument
                 getMovieInfo();
             }
         }
     })
 }
 
+//This series of if/else statements runs a function based on user input
 if (command == "my-tweets"){
     getTweets();
 } else if (command == "spotify-this-song"){
