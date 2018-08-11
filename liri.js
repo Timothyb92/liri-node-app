@@ -7,6 +7,10 @@ var fs = require("fs");
 var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter)
 var command = process.argv[2];
+var movieSearchTerm = "";
+var movieSearchArray = [];
+var spotifySearchTerm = "";
+var spotifySearchArray = [];
 
 function getTweets(){
     client.get('search/tweets', {q: 'Tim17902317'}, function(error, tweets, response) {
@@ -20,17 +24,19 @@ function getTweets(){
 }
 
 
-var spotifySearchTerm = "";
-var spotifySearchArray = [];
 if (!process.argv[3]){
     spotifySearchTerm = "The Sign";
+    movieSearchTerm = "Mr. Nobody";
 }
 else {
     for (var i = 3 ; i < process.argv.length ; i++ ){
         spotifySearchArray.push(process.argv[i]);
+        movieSearchArray.push(process.argv[i]);
     }
     spotifySearchTerm = spotifySearchArray.join(" ");
+    movieSearchTerm = movieSearchArray.join(" ");
 }
+
 function getSongInfo(song){
     song = spotifySearchTerm
     spotify.search({
@@ -49,16 +55,6 @@ function getSongInfo(song){
     })
 }
 
-var movieSearchTerm = "";
-var movieSearchArray = [];
-if (!process.argv[3]){
-    movieSearchTerm = "Mr. Nobody";
-} else {
-    for (var j = 3 ; j < process.argv.length; j++){
-        movieSearchArray.push(process.argv[j]);
-    }
-    movieSearchTerm = movieSearchArray.join(" ");
-}
 function getMovieInfo(movie){
     movie = movieSearchTerm
     request("http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy", function(error, response, body){
@@ -81,15 +77,17 @@ function doWhatItSays(){
             console.log(err);
         } else {
             var randomArr = data.split(",");
-            // var randomString = randomArr.join(" ");
             if (randomArr[0] === "spotify-this-song"){
-                console.log("Running spotify method from doWhatItSays()")
+                console.log("Running spotify search from doWhatItSays()")
                 spotifySearchTerm = randomArr[1];
                 getSongInfo();
             } else if (randomArr[0] === "my-tweets"){
+                console.log("running getTweets() from doWhatItSays()");
                 getTweets();
             } else if (randomArr[0] === "movie-this"){
-
+                console.log("Running imdb search from doWhatItSays()")
+                movieSearchTerm = randomArr[1];
+                getMovieInfo();
             }
         }
     })
