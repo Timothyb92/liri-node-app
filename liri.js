@@ -19,10 +19,10 @@ function getTweets(){
      });
 }
 
+
 var spotifySearchTerm = "";
 var spotifySearchArray = [];
 if (!process.argv[3]){
-    console.log("no argument at index 3")
     spotifySearchTerm = "The Sign";
 }
 else {
@@ -49,19 +49,19 @@ function getSongInfo(song){
     })
 }
 
-function getMovieInfo(){
-    var movieSearchTerm = "";
-    var movieSearchArray = [];
-    if (!process.argv[3]){
-        console.log("No argument at index 3");
-        movieSearchTerm = "Mr. Nobody";
-    } else {
-        for (var j = 3 ; j < process.argv.length; j++){
-            movieSearchArray.push(process.argv[j]);
-        }
-        movieSearchTerm = movieSearchArray.join(" ");
+var movieSearchTerm = "";
+var movieSearchArray = [];
+if (!process.argv[3]){
+    movieSearchTerm = "Mr. Nobody";
+} else {
+    for (var j = 3 ; j < process.argv.length; j++){
+        movieSearchArray.push(process.argv[j]);
     }
-    request("http://www.omdbapi.com/?t=" + movieSearchTerm + "&y=&plot=short&apikey=trilogy", function(error, response, body){
+    movieSearchTerm = movieSearchArray.join(" ");
+}
+function getMovieInfo(movie){
+    movie = movieSearchTerm
+    request("http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy", function(error, response, body){
         if (!error && response.statusCode === 200){
             console.log("Title: " + JSON.parse(body).Title);
             console.log("Year released: " + JSON.parse(body).Year);
