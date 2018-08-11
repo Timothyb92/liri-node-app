@@ -3,11 +3,12 @@ var keys = require("./keys.js");
 var Spotify = require("node-spotify-api");
 var Twitter = require("twitter");
 var request = require("request");
+var fs = require("fs");
 var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter)
 var command = process.argv[2];
 
-if (command == "my-tweets"){
+function getTweets(){
     client.get('search/tweets', {q: 'Tim17902317'}, function(error, tweets, response) {
         console.log("============================================================");
         //NEED TO INCREASE THIS TO 20 ONCE I HAVE 20 TWEETS
@@ -18,7 +19,7 @@ if (command == "my-tweets"){
      });
 }
 
-if (command == "spotify-this-song"){
+function getSongInfo(){
     var spotifySearchTerm = "";
     var spotifySearchArray = [];
     if (!process.argv[3]){
@@ -31,23 +32,23 @@ if (command == "spotify-this-song"){
         }
         spotifySearchTerm = spotifySearchArray.join(" ");
     }
-        spotify.search({
-                type: "track",
-                query: spotifySearchTerm,
-                limit: 1
-            },
-            function(err, data){
-                if (err) {
-                    console.log(err);
-                }
-                console.log(data.tracks.items[0].name);
-                console.log(data.tracks.items[0].album.artists[0].name);
-                console.log(data.tracks.items[0].album.name);
-                console.log(data.tracks.items[0].preview_url);
-        })
+    spotify.search({
+        type: "track",
+        query: spotifySearchTerm,
+        limit: 1
+    },
+    function(err, data){
+        if (err) {
+            console.log(err);
+        }
+        console.log(data.tracks.items[0].name);
+        console.log(data.tracks.items[0].album.artists[0].name);
+        console.log(data.tracks.items[0].album.name);
+        console.log(data.tracks.items[0].preview_url);
+    })
 }
 
-if (command == "movie-this"){
+function getMovieInfo(){
     var movieSearchTerm = "";
     var movieSearchArray = [];
     if (!process.argv[3]){
@@ -71,4 +72,20 @@ if (command == "movie-this"){
             console.log("Actors: " + JSON.parse(body).Actors);
         }
     })
+}
+
+function doWhatItSays(){
+    fs.readFile("random.txt", "utf8", function(err, data){
+
+    })
+}
+
+if (command == "my-tweets"){
+    getTweets();
+} else if (command == "spotify-this-song"){
+    getSongInfo();
+} else if (command == "movie-this"){
+    getMovieInfo();
+} else if (command === "do-what-it-says"){
+    doWhatItSays();
 }
