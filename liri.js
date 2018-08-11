@@ -65,11 +65,31 @@ function getSongInfo(song){
         if (err) {
             console.log(err);
         }
-        //Logs the name of the song, the artists, album name, and a preview URL.
+        //Appends to log.txt and console logs the name of the song, the artists, album name, and a preview URL.
         console.log(data.tracks.items[0].name);
+        fs.appendFile("log.txt", data.tracks.items[0].name, function(err){
+            if (err){
+                console.log(err);
+            }
+        })
         console.log(data.tracks.items[0].album.artists[0].name);
+        fs.appendFile("log.txt", data.tracks.items[0].album.artists[0].name, function(err){
+            if (err){
+                console.log(err);
+            }
+        })
         console.log(data.tracks.items[0].album.name);
+        fs.appendFile("log.txt", data.tracks.items[0].album.name, function(err){
+            if (err){
+                console.log(err);
+            }
+        })
         console.log(data.tracks.items[0].preview_url);
+        fs.appendFile("log.txt", data.tracks.items[0].preview_url, function(err){
+            if (err){
+                console.log(err);
+            }
+        })
     })
 }
 
