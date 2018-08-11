@@ -19,22 +19,23 @@ function getTweets(){
      });
 }
 
-function getSongInfo(){
-    var spotifySearchTerm = "";
-    var spotifySearchArray = [];
-    if (!process.argv[3]){
-        console.log("no argument at index 3")
-        spotifySearchTerm = "The Sign";
+var spotifySearchTerm = "";
+var spotifySearchArray = [];
+if (!process.argv[3]){
+    console.log("no argument at index 3")
+    spotifySearchTerm = "The Sign";
+}
+else {
+    for (var i = 3 ; i < process.argv.length ; i++ ){
+        spotifySearchArray.push(process.argv[i]);
     }
-    else {
-        for (var i = 3 ; i < process.argv.length ; i++ ){
-            spotifySearchArray.push(process.argv[i]);
-        }
-        spotifySearchTerm = spotifySearchArray.join(" ");
-    }
+    spotifySearchTerm = spotifySearchArray.join(" ");
+}
+function getSongInfo(song){
+    song = spotifySearchTerm
     spotify.search({
         type: "track",
-        query: spotifySearchTerm,
+        query: song,
         limit: 1
     },
     function(err, data){
@@ -76,7 +77,12 @@ function getMovieInfo(){
 
 function doWhatItSays(){
     fs.readFile("random.txt", "utf8", function(err, data){
-
+        if(err){
+            console.log(err);
+        } else {
+            var randomArr = data.split(",");
+            var randomString = randomArr.join(" ");
+        }
     })
 }
 
