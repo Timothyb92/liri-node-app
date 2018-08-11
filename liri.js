@@ -10,8 +10,9 @@ var command = process.argv[2];
 if (command == "my-tweets"){
     client.get('search/tweets', {q: 'Tim17902317'}, function(error, tweets, response) {
         console.log("============================================================");
-        for (i = 0 ; i < 10 ; i ++){
-            console.log(tweets.statuses[i].text);
+        //NEED TO INCREASE THIS TO 20 ONCE I HAVE 20 TWEETS
+        for (k = 0 ; k < 10 ; k ++){
+            console.log(tweets.statuses[k].text);
             console.log("============================================================");
         }
      });
@@ -44,4 +45,30 @@ if (command == "spotify-this-song"){
                 console.log(data.tracks.items[0].album.name);
                 console.log(data.tracks.items[0].preview_url);
         })
+}
+
+if (command == "movie-this"){
+    var movieSearchTerm = "";
+    var movieSearchArray = [];
+    if (!process.argv[3]){
+        console.log("No argument at index 3");
+        movieSearchTerm = "Mr. Nobody";
+    } else {
+        for (var j = 3 ; j < process.argv.length; j++){
+            movieSearchArray.push(process.argv[j]);
+        }
+        movieSearchTerm = movieSearchArray.join(" ");
+    }
+    request("http://www.omdbapi.com/?t=" + movieSearchTerm + "&y=&plot=short&apikey=trilogy", function(error, response, body){
+        if (!error && response.statusCode === 200){
+            console.log("Title: " + JSON.parse(body).Title);
+            console.log("Year released: " + JSON.parse(body).Year);
+            console.log("IMDB Rating: " + JSON.parse(body).Ratings[0].Value);
+            console.log("Rotten Tomatoes Rating: " + JSON.parse(body).Ratings[1].Value);
+            console.log("Country where movie was produced: " + JSON.parse(body).Country);
+            console.log("Language: " + JSON.parse(body).Language);
+            console.log("Plot: " + JSON.parse(body).Plot);
+            console.log("Actors: " + JSON.parse(body).Actors);
+        }
+    })
 }
