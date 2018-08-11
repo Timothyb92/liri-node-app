@@ -37,7 +37,7 @@ else {
 
 //Function taht uses the twitter package to return 20 of my tweets to the console
 function getTweets(){
-    client.get('search/tweets', {q: 'Tim17902317'}, function(error, tweets, response) {
+    client.get('search/tweets', {q: 'Tim17902317', count: 20}, function(error, tweets, response) {
         //Puts a line of ===== before the first tweet
         console.log("============================================================");
         //Loops through 20 of my tweets
