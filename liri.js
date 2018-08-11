@@ -41,9 +41,14 @@ function getTweets(){
         //Puts a line of ===== before the first tweet
         console.log("============================================================");
         //Loops through 20 of my tweets
-        for (k = 0 ; k < 20 ; k ++){
+        for (k = 0 ; k < 10 ; k ++){
             //Logs the tweet being iterated upon to the console
             console.log(tweets.statuses[k].text);
+            fs.appendFile("log.txt", tweets.statuses[k].text, function(err){
+                if (err){
+                    console.log(err);
+                }
+            })
             console.log("============================================================");
         }
      });
