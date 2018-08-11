@@ -81,7 +81,16 @@ function doWhatItSays(){
             console.log(err);
         } else {
             var randomArr = data.split(",");
-            var randomString = randomArr.join(" ");
+            // var randomString = randomArr.join(" ");
+            if (randomArr[0] === "spotify-this-song"){
+                console.log("Running spotify method from doWhatItSays()")
+                spotifySearchTerm = randomArr[1];
+                getSongInfo();
+            } else if (randomArr[0] === "my-tweets"){
+                getTweets();
+            } else if (randomArr[0] === "movie-this"){
+
+            }
         }
     })
 }
