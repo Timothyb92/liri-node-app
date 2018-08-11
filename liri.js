@@ -102,13 +102,53 @@ function getMovieInfo(movie){
         if (!error && response.statusCode === 200){
             //This series of console.logs displays the title, year, ratings, language, plot, and actors of the movie
             console.log("Title: " + JSON.parse(body).Title);
+            fs.appendFile("log.txt", JSON.parse(body).Title, function(err){
+                if (err){
+                    console.log(err);
+                }
+            })
             console.log("Year released: " + JSON.parse(body).Year);
+            fs.appendFile("log.txt", JSON.parse(body).Year, function(err){
+                if (err){
+                    console.log(err);
+                }
+            })
             console.log("IMDB Rating: " + JSON.parse(body).Ratings[0].Value);
+            fs.appendFile("log.txt", JSON.parse(body).Ratings[0].Value, function(err){
+                if (err){
+                    console.log(err);
+                }
+            })
             console.log("Rotten Tomatoes Rating: " + JSON.parse(body).Ratings[1].Value);
+            fs.appendFile("log.txt", JSON.parse(body).Ratings[1].Value, function(err){
+                if (err){
+                    console.log(err);
+                }
+            })
             console.log("Country where movie was produced: " + JSON.parse(body).Country);
+            fs.appendFile("log.txt", JSON.parse(body).Country, function(err){
+                if (err){
+                    console.log(err);
+                }
+            })
             console.log("Language: " + JSON.parse(body).Language);
+            fs.appendFile("log.txt", JSON.parse(body).Language, function(err){
+                if (err){
+                    console.log(err);
+                }
+            })
             console.log("Plot: " + JSON.parse(body).Plot);
+            fs.appendFile("log.txt", JSON.parse(body).Plot, function(err){
+                if (err){
+                    console.log(err);
+                }
+            })
             console.log("Actors: " + JSON.parse(body).Actors);
+            fs.appendFile("log.txt", JSON.parse(body).Actors, function(err){
+                if (err){
+                    console.log(err);
+                }
+            })
         }
     })
 }
